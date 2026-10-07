@@ -1,0 +1,7 @@
+/target/
+/results/
+*.bin
+*.rds
+.Rhistory
+.RData
+*.log

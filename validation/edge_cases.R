@@ -1,0 +1,13 @@
+suppressPackageStartupMessages(library(limpa))
+root<-Sys.getenv("LIMPA_RS_ROOT");source(file.path(root,"R/limpa_rs.R"))
+Sys.setenv(LIMPA_RS_BIN=file.path(root,"target/release/limpa-rs"))
+y<-matrix(c(18,19,NA,20,NA,21,NA,NA,NA),3,3,byrow=TRUE)
+ref<-peptides2Proteins(y,rep("P",3),sigma=.4,dpc=c(-11,.75),prior.mean=18,prior.sd=3,prior.logFC=2,standard.errors=TRUE)
+warned<-FALSE
+out<-withCallingHandlers(limpa_rs_fit(y,rep("P",3),c(-11,.75),.4,18,3,2),warning=function(w){warned<<-TRUE;invokeRestart("muffleWarning")})
+stopifnot(warned,identical(ref,out))
+y<-new("EList",list(E=matrix(c(18,19,20,20,21,22),2,3,byrow=TRUE),genes=data.frame(PG.ProteinGroups=c("A","B"))))
+ref<-dpcQuant(y,"PG.ProteinGroups",dpc=c(-11,.75),verbose=FALSE)
+out<-dpc_quant_rust(y,"PG.ProteinGroups",list(dpc=c(-11,.75)))
+stopifnot(identical(ref,out))
+cat("Reference fallbacks are exact for all-missing rows and all-singleton proteins.\n")

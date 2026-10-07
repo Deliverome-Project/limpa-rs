@@ -1,0 +1,2 @@
+proteins	samples	r_workers	rust_threads	reference_parallel_seconds	rust_bridge_seconds	speedup	max_log2_error	max_se_error	pass
+48	384	4	4	51.348	0.202999999999989	252.945812807896	0.00199983416819816	1.96180248462907e-07	FALSE

@@ -1,0 +1,15 @@
+limpa-rs uses the statistical model implemented by SmythLab/limpa 1.4.2
+(https://github.com/SmythLab/limpa), licensed GPL (>= 2).
+
+The R-compatible BFGS routine is adapted from R src/appl/optim.c (vmmin),
+Copyright (C) 1999-2025 The R Core Team, GPL version 2 or later.
+https://github.com/wch/r-source/blob/trunk/src/appl/optim.c
+R's implementation credits J. C. Nash and B. D. Ripley.
+
+The Spectronaut driver is adapted from Deliverome-Project/deliverome-analysis
+PR #141, commit 32c563c95410637e0431faf27eab1e7a9786464b.
+The original filtering, global parameter estimation, annotation and limma
+steps remain in R. The Rust solver is not a complete R-free LIMPA port.
+
+This combined work is distributed under GPL version 3 or later; see LICENSE.
+No experimental data is distributed in this repository.
