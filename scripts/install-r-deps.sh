@@ -64,5 +64,6 @@ echo "R $have at $RSCRIPT; restoring renv.lock (first run builds packages, ~2-5 
 cd "$ROOT"
 "$RSCRIPT" -e 'renv::restore(prompt = FALSE)'
 "$RSCRIPT" -e 'suppressPackageStartupMessages(library(limpa));
+  source("R/limpa_rs.R"); limpa_rs_assert_reference();
   cat("OK: limpa", format(packageVersion("limpa")), "| limma", format(packageVersion("limma")),
       "| library", .libPaths()[1], "\n")'

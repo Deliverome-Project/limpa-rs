@@ -63,6 +63,8 @@ protein <- dpc_quant_rust(y, "PG.ProteinGroups", dpcfit, cores = 4L)
 ```sh
 cargo test --locked
 cargo clippy --all-targets --locked -- -D warnings
+Rscript validation/test_modules.R
+Rscript validation/reference.R check
 export LIMPA_RS_ROOT="$PWD"
 Rscript validation/equivalence.R
 Rscript validation/end_to_end.R
@@ -77,7 +79,14 @@ The R validations require the pinned `renv.lock` environment. They can also be r
 from the restored PR #141 checkout while `LIMPA_RS_ROOT` points here. Private data
 and generated matrices stay outside git; only aggregate benchmark metrics are
 committed. Rust CI runs independently, including an R-generated synthetic numerical
-oracle. CI does **not** claim that private-data or full R validation ran.
+oracle. A separate R workflow restores the pinned environment and runs the frozen
+reference suite and synthetic end-to-end checks. Neither workflow claims that
+private-data or full-workload validation ran.
+
+The production bridge enforces LIMPA **1.4.2**; the lock also pins its exact source
+commit. See [the upgrade validation guide](validation/README.md) for reusable
+modules that compare future Rust builds and candidate LIMPA versions against
+frozen outputs without changing the production pin.
 
 Acceptance is absolute error ≤0.001 for every protein log2 estimate and standard
 error, with matching IDs, dimensions, ordering, observation counts and annotations.

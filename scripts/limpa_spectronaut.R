@@ -36,6 +36,11 @@ suppressPackageStartupMessages({
   library(data.table)
 })
 
+script <- sub("^--file=", "", grep("^--file=", commandArgs(), value=TRUE)[1])
+root <- dirname(dirname(normalizePath(script)))
+source(file.path(root, "R/limpa_rs.R"))
+limpa_rs_assert_reference()
+
 parse_args <- function(argv) {
   out <- list()
   for (a in argv) {
@@ -201,9 +206,6 @@ dpc_quant_parallel <- function(y, protein_id, dpcfit, cores) {
 engine <- if(is.null(args[["engine"]])) "rust" else args[["engine"]]
 if(!engine %in% c("rust","reference")) stop("--engine must be rust or reference")
 if(engine=="rust") {
-  script <- sub("^--file=", "", grep("^--file=",commandArgs(),value=TRUE)[1])
-  root <- dirname(dirname(normalizePath(script)))
-  source(file.path(root,"R/limpa_rs.R"))
   if(!nzchar(Sys.getenv("LIMPA_RS_BIN"))) Sys.setenv(LIMPA_RS_BIN=file.path(root,"target/release/limpa-rs"))
   reference_cores <- if(is.null(args[["reference-cores"]])) 1L else as.integer(args[["reference-cores"]])
   dpc_quant_parallel <- function(y,protein_id,dpcfit,cores)

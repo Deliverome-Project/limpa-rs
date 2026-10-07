@@ -2,8 +2,29 @@
 # Bridge for limpa 1.4.2. Retains its global DPC/hyperparameter estimates and
 # initial values. Only independent per-protein posterior fits move to Rust.
 # Algorithm reference: SmythLab/limpa (GPL >= 2); see NOTICE.
+# Keep this contract synchronized with renv.lock only after upgrade review.
+limpa_rs_reference <- list(
+  version = "1.4.2",
+  commit = "d9ad5218207434cfcbe080328db5e79d39a1623a"
+)
+
+.limpa_rs_validate_reference <- function(description) {
+  if (!identical(description$Version, limpa_rs_reference$version))
+    stop("Unsupported LIMPA version: expected ", limpa_rs_reference$version,
+         "; restore renv.lock. Test upgrades with validation/reference.R first.")
+  if (!is.null(description$RemoteSha) &&
+      !identical(description$RemoteSha, limpa_rs_reference$commit))
+    stop("LIMPA source commit differs from the assessed reference; restore renv.lock")
+  invisible(TRUE)
+}
+
+limpa_rs_assert_reference <- function() {
+  .limpa_rs_validate_reference(utils::packageDescription("limpa"))
+}
+
 limpa_rs_fit <- function(y, protein.id, dpc, sigma, prior.mean, prior.sd,
                          prior.logFC, binary = Sys.getenv("LIMPA_RS_BIN"), threads = 1L, initialization.groups = NULL) {
+  limpa_rs_assert_reference()
   stopifnot(nzchar(binary), file.exists(binary), threads >= 1L)
   y <- as.matrix(y)
   stopifnot(nrow(y) == length(protein.id), ncol(y) >= 2L, !anyNA(protein.id))
@@ -69,7 +90,7 @@ limpa_rs_fit <- function(y, protein.id, dpc, sigma, prior.mean, prior.sd,
 }
 
 dpc_quant_rust <- function(y, protein_id, dpcfit, cores=1L, reference.cores=1L) {
-  if(as.character(packageVersion("limpa"))!="1.4.2") stop("This bridge is validated only with limpa 1.4.2")
+  limpa_rs_assert_reference()
   dpcv <- if(is.list(dpcfit)) dpcfit$dpc else dpcfit
   pid <- as.character(y$genes[[protein_id]])
   if(!length(pid)||anyNA(pid)) stop("invalid protein IDs")
