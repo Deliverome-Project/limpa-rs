@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=77,<83", "setuptools-rust>=1.11,<2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "limpa-rs"
+version = "0.1.0rc1"
+description = "Python interface to Rust-accelerated LIMPA protein quantification"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE", "NOTICE", "LICENSES/*"]
+authors = [{name = "Deliverome Project"}]
+dependencies = ["numpy>=1.26", "pandas>=2.2"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Operating System :: MacOS",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Rust",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+
+[project.urls]
+Repository = "https://github.com/Deliverome-Project/limpa-rs"
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.scripts]
+limpa-rs = "limpa_rs.__main__:main"
+
+[tool.setuptools.package-data]
+limpa_rs = ["runtime-profile.R"]
+
+[tool.setuptools.packages.find]
+where = ["python"]
+
+[[tool.setuptools-rust.ext-modules]]
+target = {"limpa-rs" = "limpa_rs._native"}
+binding = "Exec"
+cargo-manifest-args = ["--locked"]
+debug = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests/python"]

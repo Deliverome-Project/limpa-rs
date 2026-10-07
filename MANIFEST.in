@@ -1,0 +1,9 @@
+include Cargo.toml Cargo.lock rust-toolchain.toml README.md LICENSE NOTICE LICENSING.md CITATION.cff SECURITY.md
+recursive-include src *.rs
+recursive-include R *.R
+recursive-include scripts *.R *.sh *.py
+recursive-include validation *.R *.md *.py
+include renv.lock renv/activate.R
+recursive-include LICENSES *
+recursive-include tests *.rs *.py
+recursive-include docs *.md

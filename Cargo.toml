@@ -1,0 +1,14 @@
+[package]
+name = "limpa-rs"
+version = "0.1.0-rc.1"
+edition = "2024"
+license = "GPL-3.0-or-later"
+description = "R-compatible LIMPA protein quantification with a structured Hessian"
+
+[dependencies]
+nalgebra = "0.34"
+rayon = "1.11"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

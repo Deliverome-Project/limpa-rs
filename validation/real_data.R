@@ -1,0 +1,19 @@
+# Filter once and share the same DPC fit; compare all original Astral proteins.
+suppressPackageStartupMessages({library(limpa);library(data.table)})
+root<-Sys.getenv("LIMPA_RS_ROOT");report<-Sys.getenv("LIMPA_REPORT")
+stopifnot(nzchar(root),file.exists(report))
+source(file.path(root,"R/limpa_rs.R"));Sys.setenv(LIMPA_RS_BIN=file.path(root,"target/release/limpa-rs"))
+set.seed(141)
+tread<-system.time(y<-readSpectronaut(report,annotation.columns=c("PG.ProteinGroups","PG.ProteinAccessions"),q.cutoffs=.01,filter.columns="EG.IsImputed",filter.values=TRUE))[["elapsed"]]
+tdpc<-system.time(d<-dpc(y))[["elapsed"]]
+tref<-system.time(ref<-dpcQuant(y,"PG.ProteinGroups",dpc=d,verbose=FALSE))[["elapsed"]]
+trust<-system.time(rust<-dpc_quant_rust(y,"PG.ProteinGroups",d,4L))[["elapsed"]]
+saveRDS(list(y=y,dpc=d,ref=ref,rust=rust),file.path(root,"results/astral.rds"))
+print(all.equal(ref$genes,rust$genes))
+stopifnot(identical(dimnames(ref$E),dimnames(rust$E)),identical(ref$genes,rust$genes),identical(ref$targets,rust$targets),identical(ref$other$n.observations,rust$other$n.observations))
+errE<-max(abs(ref$E-rust$E));errSE<-max(abs(ref$other$standard.error-rust$other$standard.error))
+metrics<-data.frame(proteins=nrow(ref$E),precursors=nrow(y$E),samples=ncol(y$E),read_seconds=tread,dpc_seconds=tdpc,reference_quant_seconds=tref,rust_quant_bridge_seconds=trust,quant_speedup=tref/trust,max_log2_error=errE,max_se_error=errSE,pass=errE<=1e-3&&errSE<=1e-3)
+print(metrics);dir.create(file.path(root,"results"),showWarnings=FALSE)
+fwrite(metrics,file.path(root,"results/astral-equivalence.tsv"),sep="\t")
+saveRDS(list(y=y,dpc=d,ref=ref,rust=rust),file.path(root,"results/astral.rds"))
+stopifnot(metrics$pass)

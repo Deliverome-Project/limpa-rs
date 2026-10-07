@@ -1,0 +1,2 @@
+proteins	precursors	samples	read_seconds	dpc_seconds	reference_quant_seconds	rust_quant_bridge_seconds	quant_speedup	max_log2_error	max_se_error	pass
+11010	303817	3	3.838	0.552	22.273	2.071	10.7547078705939	6.74836542202684e-08	8.78586092767364e-11	TRUE

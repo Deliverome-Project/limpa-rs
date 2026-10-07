@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "Please cite the original LIMPA methods listed below when using limpa-rs."
+title: "limpa-rs: Rust acceleration of LIMPA protein quantification"
+type: software
+version: 0.1.0-rc.1
+license: GPL-3.0-or-later
+repository-code: "https://github.com/Deliverome-Project/limpa-rs"
+authors:
+  - name: "Deliverome Project"
+references:
+  - type: article
+    title: "Quantification and differential analysis of mass spectrometry proteomics data with probabilistic recovery of information from missing values"
+    authors:
+      - family-names: Li
+        given-names: Mengbo
+      - family-names: Cobbold
+        given-names: S. A.
+      - family-names: Smyth
+        given-names: Gordon K.
+    year: 2025
+    doi: "10.1101/2025.04.28.651125"
+  - type: article
+    title: "Neither random nor censored: estimating intensity-dependent probabilities for missing values in label-free proteomics"
+    authors:
+      - family-names: Li
+        given-names: Mengbo
+      - family-names: Smyth
+        given-names: Gordon K.
+    year: 2023
+    journal: Bioinformatics
+    volume: 39
+    issue: 5
+    doi: "10.1093/bioinformatics/btad200"

@@ -1,0 +1,15 @@
+/target/
+/results/
+*.bin
+*.rds
+.Rhistory
+.RData
+*.log
+
+/build/
+/dist/
+*.egg-info/
+__pycache__/
+.pytest_cache/
+.venv/
+/python/limpa_rs/_native

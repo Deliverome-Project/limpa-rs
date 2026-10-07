@@ -1,0 +1,236 @@
+{
+  "recorded_on": "2026-10-07",
+  "scope": "Cargo.lock resolution including optional dependencies; declared licenses only",
+  "packages": [
+    {
+      "name": "approx",
+      "version": "0.5.1",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "autocfg",
+      "version": "1.5.1",
+      "license": "Apache-2.0 OR MIT"
+    },
+    {
+      "name": "bytemuck",
+      "version": "1.25.2",
+      "license": "Zlib OR Apache-2.0 OR MIT"
+    },
+    {
+      "name": "crossbeam-deque",
+      "version": "0.8.8",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "crossbeam-epoch",
+      "version": "0.9.21",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "crossbeam-utils",
+      "version": "0.8.23",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "either",
+      "version": "1.19.0",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.14.0",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.15.2",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.16.0",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.17.3",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.18.0",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.19.0",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.20.5",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.21.3",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.22.0",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.23.0",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.24.2",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.25.0",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.27.0",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.28.0",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.29.3",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.30.10",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.31.1",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "glam",
+      "version": "0.32.1",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "limpa-rs",
+      "version": "0.1.0-rc.1",
+      "license": "GPL-3.0-or-later"
+    },
+    {
+      "name": "matrixmultiply",
+      "version": "0.3.11",
+      "license": "MIT/Apache-2.0"
+    },
+    {
+      "name": "nalgebra",
+      "version": "0.34.2",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "nalgebra-macros",
+      "version": "0.3.0",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "num-bigint",
+      "version": "0.4.8",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "num-complex",
+      "version": "0.4.6",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "num-integer",
+      "version": "0.1.47",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "num-rational",
+      "version": "0.4.2",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "num-traits",
+      "version": "0.2.19",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "paste",
+      "version": "1.0.15",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "proc-macro2",
+      "version": "1.0.107",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "quote",
+      "version": "1.0.47",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "rawpointer",
+      "version": "0.2.1",
+      "license": "MIT/Apache-2.0"
+    },
+    {
+      "name": "rayon",
+      "version": "1.12.0",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "rayon-core",
+      "version": "1.13.0",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "safe_arch",
+      "version": "0.7.4",
+      "license": "Zlib OR Apache-2.0 OR MIT"
+    },
+    {
+      "name": "simba",
+      "version": "0.9.1",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "syn",
+      "version": "2.0.119",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "typenum",
+      "version": "1.20.1",
+      "license": "MIT OR Apache-2.0"
+    },
+    {
+      "name": "unicode-ident",
+      "version": "1.0.26",
+      "license": "(MIT OR Apache-2.0) AND Unicode-3.0"
+    },
+    {
+      "name": "wide",
+      "version": "0.7.33",
+      "license": "Zlib OR Apache-2.0 OR MIT"
+    }
+  ]
+}
