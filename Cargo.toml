@@ -7,8 +7,8 @@ license = "GPL-3.0-or-later"
 description = "R-compatible LIMPA protein quantification with a structured Hessian"
 
 [dependencies]
-nalgebra = "0.34"
-rayon = "1.11"
+nalgebra = "=0.34.2"
+rayon = "=1.12.0"
 
 [profile.release]
 lto = "thin"

@@ -1,7 +1,7 @@
 # limpa-rs
 
-Rust acceleration of LIMPA 1.4.2 protein quantification for Deliverome Spectronaut
-DIA data. The numerical core preserves LIMPA's likelihood, 16-node normal
+Rust acceleration of LIMPA 1.4.2 protein quantification from precursor-level
+proteomics data. The numerical core preserves LIMPA's likelihood, 16-node normal
 quadrature, sum-to-zero peptide effects, protein priors, R-compatible BFGS stopping
 rules, and observed-Hessian standard errors. Independent proteins run in parallel.
 
@@ -9,8 +9,25 @@ rules, and observed-Hessian standard errors. Independent proteins run in paralle
 reads/filters inputs, estimates the detection probability curve and empirical
 Bayes hyperparameters, supplies reference starting values, and performs limma DE.
 Keeping those stages shared isolates the equivalence test to the expensive core.
-The Spectronaut entry point preserves the output files used by
-[deliverome-analysis PR #141](https://github.com/Deliverome-Project/deliverome-analysis/pull/141).
+
+## Input formats
+
+The numerical core is independent of the instrument and upstream search software.
+It works with precursor-level log2 intensities, missing observations, and
+precursor-to-protein assignments—not an already aggregated protein matrix.
+
+- **Spectronaut Normal Reports:** the Python convenience function reads the report
+  and applies the supported quality and imputation filters.
+- **Prepared precursor matrices:** the same Python function accepts `matrix_dir`.
+  See the [compact matrix format](docs/installation.md#compact-matrix-input) for
+  the required files. Filtering and normalization must be done upstream.
+- **Other data readers:** the source-level R bridge accepts a LIMPA-compatible
+  `EList` with a precursor matrix and protein annotations (example below).
+
+The Python function retains the name `run_limpa_spectronaut` for compatibility;
+it is not a universal report reader. Other search-engine exports need an adapter
+or preparation into the matrix format. Biological suitability and numerical
+agreement must be assessed for each new input workflow.
 
 Target: at least 20× faster quantification on approximately 11,000 proteins and
 384 samples, with matrix-to-protein processing within 900 seconds on a local
@@ -44,8 +61,8 @@ result.protein_log2
 result.protein_se
 ```
 
-The pandas API follows PR141's `deliverome_analysis.limpa`; change the import to
-`limpa_rs`. See [installation and analysis integration](docs/installation.md) for
+The Python API returns pandas matrices, annotations, and optional differential-analysis
+tables. See [installation and analysis integration](docs/installation.md) for
 tagged Git installs, reproducible version pins, DE, compact matrices, setup paths
 and troubleshooting. This is an **experimental installable package**, not a public
 PyPI release or a completed real 384-sample validation.
@@ -62,33 +79,41 @@ Rscript scripts/limpa_spectronaut.R \
   --engine=rust --cores=4 --seed=141
 ```
 
-For a large 384-run report, first use PR #141's streaming
-`deliverome_analysis.spectronaut_trim.trim_spectronaut_report`, then supply
-`--matrix-dir=/path/to/trimmed` in place of `--report`. This prevents loading a
-potentially 100+ GB full Spectronaut export as an R long table. Trimming is separate
-from quantification and must be timed separately when assessing report-to-results
-latency. The compact matrix itself is roughly 0.9 GB for 303,817 × 384 doubles.
+For large reports, prepare a compact precursor matrix and supply
+`--matrix-dir=/path/to/matrix` in place of `--report`. See the
+[compact matrix format](docs/installation.md#compact-matrix-input). This avoids
+loading the full long-format report into R. Input preparation is separate from
+quantification and must be timed separately for report-to-results benchmarks.
 
-Optional flags from PR #141 remain available: `--samples`, `--formula`,
-`--contrasts`, `--protein-id`, `--q-cutoff`, and `--compare=maxlfq_proda`.
+Optional flags include `--samples`, `--formula`, `--contrasts`, `--protein-id`,
+`--q-cutoff`, and `--compare=maxlfq_proda`.
 Use `--engine=reference --cores=1 --seed=141` for the original serial fitter.
 The seed makes DPC random subsampling reproducible across separate invocations.
 Rust's `--cores` controls worker threads; its starting values match serial R by
-default, independently of the thread count. To reproduce PR #141's R worker
-chunks, add `--reference-cores=4` when comparing with `--engine=reference --cores=4`.
-This is necessary because PR #141 computes its initial imputation separately in
-each worker chunk. Changing initialization chunks can change early-stopped fits.
-All current validations use normalized Spectronaut quantities without a second
-normalization step.
+default, independently of the thread count. For comparison with a four-worker R
+reference, add `--reference-cores=4` to the Rust run and use
+`--engine=reference --cores=4` for the reference run. The parallel reference
+computes initial imputation separately in each worker chunk, so changing chunks
+can change early-stopped fits. Current real-data validations use normalized
+Spectronaut quantities without a second normalization step.
 
-The R bridge can also be sourced directly:
+The R bridge can also be sourced directly from a checkout using the pinned R
+environment. Here `precursor_log2` is a numeric precursor-by-sample matrix with
+unique row/column names and `NA` for missing observations; `protein_ids` supplies
+one nonmissing protein assignment per row. Inputs must already be filtered and
+appropriately normalized; this call does not read or filter vendor reports:
 
 ```r
 source("R/limpa_rs.R")
 Sys.setenv(LIMPA_RS_BIN = normalizePath("target/release/limpa-rs"))
+library(limma)
+y <- new("EList", list(
+  E = precursor_log2,
+  genes = data.frame(protein_id = protein_ids, row.names = rownames(precursor_log2))
+))
 set.seed(141)
 dpcfit <- limpa::dpc(y)
-protein <- dpc_quant_rust(y, "PG.ProteinGroups", dpcfit, cores = 4L)
+protein <- dpc_quant_rust(y, "protein_id", dpcfit, cores = 4L)
 ```
 
 ## Equivalence and tests
@@ -108,8 +133,8 @@ Rscript validation/scale.R
 Rscript validation/parallel_reference.R
 ```
 
-The R validations require the pinned `renv.lock` environment. They can also be run
-from the restored PR #141 checkout while `LIMPA_RS_ROOT` points here. Private data
+The R validations require the pinned `renv.lock` environment and
+`LIMPA_RS_ROOT` pointing to this checkout. Private data
 and generated matrices stay outside git; only aggregate benchmark metrics are
 committed. Rust CI runs independently, including an R-generated synthetic numerical
 oracle. A separate R workflow restores the pinned environment and runs the frozen
@@ -147,7 +172,7 @@ output-equivalence claim.
   callers receive an error for those rows.
 - LIMPA uses a separate estimator when *every* protein has one precursor. The R
   bridge delegates that case unchanged to LIMPA.
-- The core assumes unweighted observations, matching this Spectronaut pipeline.
+- The core currently supports unweighted observations.
   It is not a replacement for all of LIMPA's public APIs.
 - Reaching BFGS's 100-iteration limit fails explicitly; the original R implementation
   can return `convergence=1` without the caller checking it.
@@ -163,10 +188,9 @@ output-equivalence claim.
 Original LIMPA methods: Li, Cobbold & Smyth (2025), and Li & Smyth (2023).
 See [CITATION.cff](CITATION.cff) for the full references.
 
-Reference: LIMPA 1.4.2, limma 3.68.5, R 4.6.1 and PR #141 commit
-`32c563c95410637e0431faf27eab1e7a9786464b`. The driver and R package lock are copied
-from that commit with a selectable Rust backend and deterministic seed added.
-The optimizer is adapted from R Core's `vmmin`; see [NOTICE](NOTICE) and [LICENSE](LICENSE).
+Reference: LIMPA 1.4.2, limma 3.68.5, and R 4.6.1.
+The optimizer is adapted from R Core's `vmmin`. Full source provenance and
+contributor acknowledgments are retained in [NOTICE](NOTICE); see also [LICENSE](LICENSE).
 
 ## License and porting practice
 
