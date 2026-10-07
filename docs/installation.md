@@ -39,7 +39,7 @@ uv run python -m limpa_rs doctor
 
 Replace the placeholder with the full reviewed commit SHA. The repository is public; no GitHub token is needed to read it. Commit your
 analysis project's `pyproject.toml` and `uv.lock` through its normal review process.
-No changes to `deliverome-analysis` are required just to use this package.
+The package can be used from an independent analysis project.
 
 ## R isolation and configuration
 
@@ -51,9 +51,9 @@ The **entire** R lock must match; both the wrapper and the R bridge check the
 assessed LIMPA version. R 4.6.x is enforced at runtime.
 
 - `LIMPA_RS_RSCRIPT`: explicit Rscript path; `DELIVEROME_RSCRIPT` is also accepted
-  for compatibility with deliverome-analysis.
+  as a legacy alias.
 - `LIMPA_RS_R_PROJECT`: optional location of the pinned R project. Set it before
-  setup and analysis. An existing PR141 project can be reused if its lock matches
+  setup and analysis. An existing R project can be reused if its lock matches
   exactly. A different lock is rejected, never overwritten.
 - `LIMPA_RS_BIN`: developer-only override of the packaged executable; run validation
   after overriding it. Normal users do not need this setting.
@@ -61,9 +61,9 @@ assessed LIMPA version. R 4.6.x is enforced at runtime.
 `python -m limpa_rs doctor` reports the selected paths and validated LIMPA version.
 If setup fails, fix the reported R/network/system-library issue and rerun setup.
 
-## Same analysis interface as PR141
+## Spectronaut reports
 
-Change the import:
+Read a Spectronaut Normal Report:
 
 ```python
 from limpa_rs import run_limpa_spectronaut
@@ -81,29 +81,49 @@ annotations = result.proteins
 de_tables = result.de
 ```
 
-The `LimpaResult` fields match `deliverome_analysis.limpa`: pandas protein matrices,
-annotations, sample metadata, summary, DPC points and optional DE/comparator tables.
-`detection_probability` and `limpa_available` are also available. This is interface
-compatibility, not Python class identity with Deliverome's original `LimpaResult`.
-S3 download remains the analysis project's responsibility; pass local paths here.
+The `LimpaResult` contains pandas protein matrices, annotations, sample metadata,
+a summary, DPC points and optional DE/comparator tables. `detection_probability`
+and `limpa_available` are also available. Download remote inputs before calling
+the package; pass local paths here.
 
-Normal Report columns and q-value/imputation filtering match PR141. The input must
-be precursor-level, with `EG.IsImputed` included when Spectronaut has imputed values.
+The report reader uses LIMPA's Spectronaut importer with precursor and protein
+q-value filtering. The input must be precursor-level, with `EG.IsImputed` included
+when Spectronaut has imputed values; flagged values are excluded.
 The output directory must be empty; use a new directory for each run. Without
 `outdir`, outputs are returned as DataFrames and temporary files are cleaned up,
 including on failure. Persistent results are staged beside the requested destination
 and published only after estimates, uncertainty and IDs have been checked. Local
 macOS/Linux filesystems supporting atomic directory renames and hard links are required.
 
-For large 384-run exports, keep using the existing streaming trimmer:
+## Compact matrix input
+
+The numerical core does not require Spectronaut. The current Python entry point
+also accepts a directory of prepared precursor matrices, despite its historical
+function name:
 
 ```python
-from deliverome_analysis.spectronaut_trim import trim_spectronaut_report
 from limpa_rs import run_limpa_spectronaut
 
-# Prepare the compact matrix using PR141's existing trimmer and its documented API.
-result = run_limpa_spectronaut(matrix_dir="/path/to/trimmed", cores=4)
+result = run_limpa_spectronaut(matrix_dir="/path/to/matrix", cores=4)
 ```
+
+Prepare these files with any suitable data reader:
+
+| File | Required contents |
+| --- | --- |
+| `precursor_log2.parquet` | First column `precursor` with unique IDs, then numeric sample columns containing log2 intensities; missing observations are null/NaN. |
+| `precursors.parquet` | `precursor` and `protein_id` columns, one row per precursor; optional protein annotations. |
+| `samples.tsv` | `run` column matching the matrix sample names, plus any covariates used in the analysis formula. |
+| `manifest.json` | Flat JSON object with `source_report` (input provenance string) and `imputed_flag_present` (boolean indicating whether an imputation flag was available during preparation). |
+
+Precursor IDs must match across both Parquet files, every precursor must have a
+protein assignment, and sample names must match `samples.tsv`. Use at least two
+samples. Apply source-appropriate quality filters and normalization before writing
+these files, and exclude imputed values so missingness is preserved. Matrix mode
+does not reapply report q-value or imputation filters; the manifest records
+provenance rather than performing filtering. The package does not bundle a
+streaming report converter. Other search-engine exports require upstream
+preparation and validation of that workflow.
 
 Give exactly one of `report` or `matrix_dir`. Existing `samples`, `formula`,
 `contrasts`, `protein_id`, `q_cutoff` and `compare=["maxlfq_proda"]` options remain.
