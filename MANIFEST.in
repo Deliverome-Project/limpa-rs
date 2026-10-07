@@ -1,0 +1,9 @@
+include Cargo.toml Cargo.lock README.md LICENSE NOTICE LICENSING.md CITATION.cff
+recursive-include src *.rs
+recursive-include R *.R
+recursive-include scripts *.R *.sh
+recursive-include validation *.R *.md
+include renv.lock renv/activate.R
+recursive-include LICENSES *
+recursive-include tests *.rs *.py
+recursive-include docs *.md

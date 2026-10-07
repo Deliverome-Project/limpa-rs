@@ -17,3 +17,9 @@ Copyright (c) 2026 Posit Software, PBC; see LICENSES/renv-MIT.txt.
 Its upstream license and attribution are retained, not replaced by our SPDX tags.
 Other dependencies retain their own licenses; see LICENSING.md.
 No experimental data is distributed in this repository.
+
+The Python analysis interface is adapted from the same PR #141's
+src/deliverome_analysis/limpa.py. The package retains the original LIMPA
+methods and credits Mengbo Li and Gordon Smyth (authors), and Pedro Baldoni
+(contributor). Please cite Li, Cobbold & Smyth (2025), doi:10.1101/2025.04.28.651125,
+and Li & Smyth (2023), doi:10.1093/bioinformatics/btad200; see CITATION.cff.

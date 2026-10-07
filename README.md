@@ -17,7 +17,35 @@ Target: at least 20× faster quantification on approximately 11,000 proteins and
 machine. See [BENCHMARKS.md](BENCHMARKS.md) for measured results and the exact timing
 boundaries. Do not interpret a subset speedup as a measured full-workload speedup.
 
-## Build and run
+## Install as a Python package
+
+Python >=3.11, R 4.6.x, macOS/Linux. From this checkout, in your analysis environment:
+
+```sh
+uv pip install .
+python -m limpa_rs setup-r
+python -m limpa_rs doctor
+python -m limpa_rs validate
+```
+
+Source installation requires Rust; a matching compiled wheel bundles the executable.
+The setup step explicitly restores the pinned R environment into a user cache.
+
+```python
+from limpa_rs import run_limpa_spectronaut
+
+result = run_limpa_spectronaut("NormalReport.tsv", cores=4, seed=141)
+result.protein_log2
+result.protein_se
+```
+
+The pandas API follows PR141's `deliverome_analysis.limpa`; change the import to
+`limpa_rs`. See [installation and analysis integration](docs/installation.md) for
+private Git installs, reproducible version pins, DE, compact matrices, setup paths
+and troubleshooting. This is an **experimental installable package**, not a public
+PyPI release or a completed real 384-sample validation.
+
+## Build and run from source
 
 Install Rust and R 4.6.x, then:
 
@@ -126,6 +154,9 @@ output-equivalence claim.
   overwrite an existing output file.
 
 ## Provenance
+
+Original LIMPA methods: Li, Cobbold & Smyth (2025), and Li & Smyth (2023).
+See [CITATION.cff](CITATION.cff) for the full references.
 
 Reference: LIMPA 1.4.2, limma 3.68.5, R 4.6.1 and PR #141 commit
 `32c563c95410637e0431faf27eab1e7a9786464b`. The driver and R package lock are copied

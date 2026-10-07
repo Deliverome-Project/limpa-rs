@@ -36,3 +36,13 @@ The renv bootstrap remains unmodified. Its separate MIT text is reconstructed fr
 the installed 1.3.1 package's LICENSE fields and R's canonical MIT template, with
 that provenance included alongside the text. The R optimizer's original notice is
 available in [R's optim.c](https://github.com/wch/r-source/blob/trunk/src/appl/optim.c).
+
+## Python distributions
+
+Python wheels retain the root license, NOTICE, renv's MIT license and the
+verbatim Rust dependency notices in `LICENSES/rust-dependencies.txt`. The latter
+covers the locked resolution, including optional dependencies, and should be
+refreshed when Cargo.lock changes. Wheels bundle the Rust executable and original
+R/runtime sources; the matching source distribution includes Cargo.lock and all
+Rust sources. Distribute that matching source alongside binary wheels. Python
+and R dependencies installed separately retain their own notices and licenses.
