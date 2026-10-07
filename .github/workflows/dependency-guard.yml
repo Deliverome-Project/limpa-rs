@@ -1,0 +1,17 @@
+# Shared Deliverome dependency guard (Deliverome-Project/.github): fails a PR that silently
+# downgrades a package or newly locks a version under 7 days old, across uv.lock, Cargo.lock
+# and package-lock.json. Deliberate exceptions go in the PR description:
+#   allow-downgrade: <name>
+#   allow-fresh: <name>
+name: dependency-guard
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]  # edited: re-check after an allow line
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    uses: Deliverome-Project/.github/.github/workflows/dependency-guard.yml@v1
