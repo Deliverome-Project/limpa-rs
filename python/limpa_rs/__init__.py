@@ -4,7 +4,7 @@
 from .api import COMPARATORS, LimpaResult, detection_probability, run_limpa_spectronaut
 from .runtime import limpa_available, runtime_info, setup_r, validate
 
-__version__ = "0.1.0"
+__version__ = "0.1.0rc1"
 __all__ = [
     "COMPARATORS",
     "LimpaResult",

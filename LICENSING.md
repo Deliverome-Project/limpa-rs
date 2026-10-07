@@ -2,7 +2,7 @@
 
 The project license is **GPL-3.0-or-later**, consistently declared in `Cargo.toml`,
 `LICENSE`, and SPDX headers on the Rust core and R bridge/driver. The existing GPLv3
-license text remains unchanged. Repository visibility remains private.
+license text remains unchanged. The public release retains all upstream notices.
 
 This is a source-informed port: its BFGS implementation adapts R Core's `vmmin`,
 whose notice permits GPL version 2 or later. LIMPA 1.4.2 declares `GPL (>=2)` in
@@ -28,9 +28,8 @@ We therefore do not offer the combined implementation under MIT or Apache alone.
 resolution, including optional packages. It is a metadata inventory, not a binary
 SBOM or a substitute for dependency license texts. Dependencies include permissive
 MIT, Apache-2.0, Zlib and Unicode-3.0 declarations. Refresh this inventory when the
-lockfile changes. If binaries are distributed later, include applicable dependency
-license texts/notices and the corresponding source required by the chosen license;
-this PR does not publish a binary release or alter upstream grants.
+lockfile changes. Binary releases include dependency license texts/notices and a corresponding-source
+bundle with vendored Rust dependencies. These releases do not alter upstream grants.
 
 The renv bootstrap remains unmodified. Its separate MIT text is reconstructed from
 the installed 1.3.1 package's LICENSE fields and R's canonical MIT template, with
@@ -44,5 +43,7 @@ verbatim Rust dependency notices in `LICENSES/rust-dependencies.txt`. The latter
 covers the locked resolution, including optional dependencies, and should be
 refreshed when Cargo.lock changes. Wheels bundle the Rust executable and original
 R/runtime sources; the matching source distribution includes Cargo.lock and all
-Rust sources. Distribute that matching source alongside binary wheels. Python
+Rust sources. The corresponding-source release bundle additionally vendors the
+locked Rust dependency sources and Cargo offline configuration. Distribute that
+matching bundle alongside binary wheels. Python
 and R dependencies installed separately retain their own notices and licenses.

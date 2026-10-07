@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "Please cite the original LIMPA methods listed below when using limpa-rs."
 title: "limpa-rs: Rust acceleration of LIMPA protein quantification"
 type: software
-version: 0.1.0
+version: 0.1.0-rc.1
 license: GPL-3.0-or-later
 repository-code: "https://github.com/Deliverome-Project/limpa-rs"
 authors:

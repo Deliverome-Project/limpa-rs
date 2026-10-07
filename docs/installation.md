@@ -9,19 +9,18 @@ There is no CRAN/Bioconductor `library(limpaRs)` package or public PyPI release.
 
 ## Install
 
-Until the implementation PR is merged, use a local checkout of that PR:
+Install a matching wheel from the
+[GitHub release](https://github.com/Deliverome-Project/limpa-rs/releases/tag/v0.1.0-rc.1),
+or build the tagged source:
 
 ```sh
-gh repo clone Deliverome-Project/limpa-rs
-cd limpa-rs
-gh pr checkout 1
-uv pip install .
+uv pip install "git+https://github.com/Deliverome-Project/limpa-rs.git@v0.1.0-rc.1"
 python -m limpa_rs setup-r
 python -m limpa_rs doctor
 python -m limpa_rs validate
 ```
 
-Run these inside your analysis Python environment. `python -m pip install .`
+Run these inside your analysis Python environment. `python -m pip install "git+https://github.com/Deliverome-Project/limpa-rs.git@v0.1.0-rc.1"`
 works too. Installation compiles the Rust executable in release mode with
 `Cargo.lock` enforced and includes the R driver, lockfile and validation fixtures.
 The explicit `setup-r` step downloads/restores R dependencies; importing the package
@@ -35,8 +34,7 @@ uv run python -m limpa_rs setup-r
 uv run python -m limpa_rs doctor
 ```
 
-Replace the placeholder with the full reviewed commit SHA. Private Git access must
-already work on the machine; do not put tokens in dependency URLs. Commit your
+Replace the placeholder with the full reviewed commit SHA. The repository is public; no GitHub token is needed to read it. Commit your
 analysis project's `pyproject.toml` and `uv.lock` through its normal review process.
 No changes to `deliverome-analysis` are required just to use this package.
 
@@ -90,7 +88,9 @@ Normal Report columns and q-value/imputation filtering match PR141. The input mu
 be precursor-level, with `EG.IsImputed` included when Spectronaut has imputed values.
 The output directory must be empty; use a new directory for each run. Without
 `outdir`, outputs are returned as DataFrames and temporary files are cleaned up,
-including on failure.
+including on failure. Persistent results are staged beside the requested destination
+and published only after estimates, uncertainty and IDs have been checked. Local
+macOS/Linux filesystems supporting atomic directory renames and hard links are required.
 
 For large 384-run exports, keep using the existing streaming trimmer:
 
@@ -119,6 +119,6 @@ The package remains experimental until that assessment is complete.
 Build source archives and wheels with `uv build` (or `python -m build`). Test wheels
 from outside the checkout; developer source imports do not exercise bundled assets.
 CI builds from the source archive, installs the resulting wheel, and runs package
-and R integration tests. There is no automatic publication to PyPI or public release.
-When distributing binaries, provide the matching source archive and retained license
-notices; see `LICENSING.md`.
+and R integration tests. There is no automatic publication to PyPI. Public releases are explicit, tagged GitHub releases.
+When distributing binaries, provide the matching corresponding-source bundle (including
+vendored Rust dependencies) and retained notices; see `LICENSING.md`.

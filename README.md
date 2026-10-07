@@ -17,6 +17,11 @@ Target: at least 20× faster quantification on approximately 11,000 proteins and
 machine. See [BENCHMARKS.md](BENCHMARKS.md) for measured results and the exact timing
 boundaries. Do not interpret a subset speedup as a measured full-workload speedup.
 
+**Release status:** v0.1.0-rc.1 is a public release candidate. Production use on
+an actual ~384-sample cohort has not yet been validated. See
+[release acceptance criteria](docs/release-readiness.md) before replacing a validated
+analysis workflow.
+
 ## Install as a Python package
 
 Python >=3.11, R 4.6.x, macOS/Linux. From this checkout, in your analysis environment:
@@ -28,7 +33,7 @@ python -m limpa_rs doctor
 python -m limpa_rs validate
 ```
 
-Source installation requires Rust; a matching compiled wheel bundles the executable.
+Source installation uses the pinned Rust toolchain; a matching compiled wheel bundles the executable.
 The setup step explicitly restores the pinned R environment into a user cache.
 
 ```python
@@ -41,7 +46,7 @@ result.protein_se
 
 The pandas API follows PR141's `deliverome_analysis.limpa`; change the import to
 `limpa_rs`. See [installation and analysis integration](docs/installation.md) for
-private Git installs, reproducible version pins, DE, compact matrices, setup paths
+tagged Git installs, reproducible version pins, DE, compact matrices, setup paths
 and troubleshooting. This is an **experimental installable package**, not a public
 PyPI release or a completed real 384-sample validation.
 
@@ -149,9 +154,9 @@ output-equivalence claim.
 - High precursor counts still make BFGS and the peptide factorization expensive.
 - Differential-expression computation and comparator pipelines remain in R;
   their runtime is additional to the quantification benchmarks.
-- A failed CLI run can leave an incomplete output file. The bridge checks process
-  success before reading it and cleans its temporary files. The CLI refuses to
-  overwrite an existing output file.
+- The native CLI publishes its output only after success and refuses to overwrite
+  an existing file. The Python API validates complete, finite, aligned outputs before
+  atomically publishing the result directory; a failed run publishes no partial result.
 
 ## Provenance
 

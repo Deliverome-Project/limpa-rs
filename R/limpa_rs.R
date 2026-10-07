@@ -25,9 +25,14 @@ limpa_rs_assert_reference <- function() {
 limpa_rs_fit <- function(y, protein.id, dpc, sigma, prior.mean, prior.sd,
                          prior.logFC, binary = Sys.getenv("LIMPA_RS_BIN"), threads = 1L, initialization.groups = NULL) {
   limpa_rs_assert_reference()
-  stopifnot(nzchar(binary), file.exists(binary), threads >= 1L)
+  stopifnot(length(threads)==1L, is.finite(threads), threads>=1L, threads==as.integer(threads),
+            length(binary)==1L, nzchar(binary), file.exists(binary),
+            length(dpc)==2L, all(is.finite(dpc)), length(prior.mean)==1L,
+            is.finite(prior.mean), length(prior.sd)==1L, is.finite(prior.sd), prior.sd>0,
+            length(prior.logFC)==1L, is.finite(prior.logFC), prior.logFC>0)
   y <- as.matrix(y)
-  stopifnot(nrow(y) == length(protein.id), ncol(y) >= 2L, !anyNA(protein.id))
+  stopifnot(is.numeric(y), nrow(y)>0L, nrow(y) == length(protein.id), ncol(y) >= 2L,
+            !anyNA(protein.id), !any(is.infinite(y)))
   o <- order(protein.id); protein.id <- as.character(protein.id[o]); y <- y[o,,drop=FALSE]
   ids <- unique(protein.id); np <- length(ids); n <- ncol(y)
   starts <- which(!duplicated(protein.id)); ends <- c(starts[-1]-1L,nrow(y))
@@ -82,6 +87,7 @@ limpa_rs_fit <- function(y, protein.id, dpc, sigma, prior.mean, prior.sd,
     matrix(values,nrow=np,byrow=TRUE)
   },finally=close(con))
   E <- z[,seq_len(n),drop=FALSE]; se <- z[,n+seq_len(n),drop=FALSE]
+  stopifnot(all(se>0))
   dimnames(E)<-dimnames(se)<-list(ids,colnames(y))
   nobs <- t(vapply(seq_len(np),function(i) colSums(!is.na(y[starts[i]:ends[i],,drop=FALSE])),numeric(n)))
   dimnames(nobs)<-dimnames(E)

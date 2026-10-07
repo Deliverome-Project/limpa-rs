@@ -251,3 +251,14 @@ def test_compact_matrix_input(report, tmp_path):
     b = lp.run_limpa_spectronaut(matrix_dir=tmp_path, cores=4)
     pd.testing.assert_frame_equal(a.protein_log2, b.protein_log2, atol=1e-3, rtol=0)
     pd.testing.assert_frame_equal(a.protein_se, b.protein_se, atol=1e-3, rtol=0)
+
+
+@needs_limpa
+def test_successful_output_publication(report, tmp_path):
+    out = tmp_path / "complete"
+    out.mkdir()  # Existing empty output directories are also supported.
+    result = lp.run_limpa_spectronaut(report, outdir=out)
+    assert result.outdir == out.resolve()
+    assert (out / "summary.json").is_file()
+    assert (out / "protein_log2.tsv").is_file()
+    assert not list(tmp_path.glob(".limpa-rs-*"))

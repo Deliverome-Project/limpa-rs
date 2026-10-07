@@ -267,8 +267,11 @@ impl Factor {
 pub fn fit_newton(p: &Protein, m: Model) -> Result<Fit, String> {
     if p.samples < 2
         || p.peptides == 0
-        || p.y.len() != p.samples * p.peptides
-        || p.start.len() != p.samples + p.peptides - 1
+        || p.samples.checked_mul(p.peptides) != Some(p.y.len())
+        || p.samples
+            .checked_add(p.peptides)
+            .and_then(|n| n.checked_sub(1))
+            != Some(p.start.len())
     {
         return Err("invalid protein dimensions".into());
     }
@@ -342,8 +345,11 @@ pub fn fit_newton(p: &Protein, m: Model) -> Result<Fit, String> {
 pub fn fit(p: &Protein, m: Model) -> Result<Fit, String> {
     if p.samples < 2
         || p.peptides == 0
-        || p.y.len() != p.samples * p.peptides
-        || p.start.len() != p.samples + p.peptides - 1
+        || p.samples.checked_mul(p.peptides) != Some(p.y.len())
+        || p.samples
+            .checked_add(p.peptides)
+            .and_then(|n| n.checked_sub(1))
+            != Some(p.start.len())
         || ![p.sigma, m.prior_sd, m.prior_logfc]
             .iter()
             .all(|x| x.is_finite() && *x > 0.0)
@@ -610,5 +616,29 @@ mod tests {
         for (j, se) in factor.se().iter().enumerate() {
             assert!((se * se - inv[(j, j)]).abs() < 1e-7);
         }
+    }
+}
+
+#[cfg(test)]
+mod input_limits {
+    use super::*;
+    #[test]
+    fn oversized_dimensions_return_errors_without_integer_overflow() {
+        let p = Protein {
+            samples: usize::MAX,
+            peptides: 2,
+            sigma: 0.4,
+            y: vec![],
+            start: vec![],
+        };
+        let m = Model {
+            intercept: -11.0,
+            slope: 0.75,
+            prior_mean: 18.0,
+            prior_sd: 3.0,
+            prior_logfc: 2.0,
+        };
+        assert!(fit(&p, m).is_err());
+        assert!(fit_newton(&p, m).is_err());
     }
 }

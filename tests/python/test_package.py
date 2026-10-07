@@ -2,6 +2,7 @@
 import json
 import os
 import subprocess
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -101,3 +102,50 @@ def test_identifier_strings_preserved(tmp_path):
 def test_installed_reference_equivalence():
     assert lp.limpa_available()
     lp.validate()
+
+
+def _valid_result():
+    e = pd.DataFrame(
+        [[18.0, 19.0]], index=pd.Index(["P1"], name="protein_id"), columns=["a", "b"]
+    )
+    return lp.LimpaResult(
+        e,
+        e * 0 + 0.2,
+        pd.DataFrame(index=e.index),
+        pd.DataFrame(index=pd.Index(["a", "b"], name="run")),
+        {"n_proteins": 1, "n_runs": 2},
+    )
+
+
+@pytest.mark.parametrize("mutation", ["nonfinite", "negative_se", "ordering", "counts"])
+def test_invalid_outputs_rejected(mutation):
+    result = _valid_result()
+    if mutation == "nonfinite":
+        result.protein_log2.iloc[0, 0] = np.nan
+    elif mutation == "negative_se":
+        result.protein_se.iloc[0, 0] = -0.1
+    elif mutation == "ordering":
+        result.samples = result.samples.iloc[::-1]
+    else:
+        result.summary["n_runs"] = 3
+    with pytest.raises(RuntimeError):
+        api._validate_result(result)
+
+
+def test_failed_persistent_run_never_publishes_partial_files(tmp_path, monkeypatch):
+    report = tmp_path / "input.tsv"
+    report.touch()
+    destination = tmp_path / "final"
+
+    def fail(args, **kwargs):
+        out = Path(
+            next(arg.split("=", 1)[1] for arg in args if arg.startswith("--outdir="))
+        )
+        (out / "protein_log2.tsv").write_text("incomplete")
+        raise RuntimeError("interrupted run")
+
+    monkeypatch.setattr(api, "_run", fail)
+    with pytest.raises(RuntimeError, match="interrupted"):
+        lp.run_limpa_spectronaut(report, outdir=destination)
+    assert not destination.exists()
+    assert not list(tmp_path.glob(".limpa-rs-*"))

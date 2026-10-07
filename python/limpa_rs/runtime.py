@@ -151,6 +151,11 @@ def setup_r(project=None) -> Path:
 
 def runtime_info() -> dict:
     """Verify the installed binary, R and LIMPA pin; raise with setup diagnostics."""
+    probe = subprocess.run([str(_binary())], capture_output=True, text=True, timeout=10)
+    if probe.returncode != 1 or "Usage: limpa-rs" not in probe.stderr:
+        raise RuntimeError(
+            "Rust executable failed its startup check; reinstall limpa-rs"
+        )
     proc = _run(
         [
             "-e",

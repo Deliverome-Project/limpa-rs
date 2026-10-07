@@ -138,12 +138,19 @@ def run_limpa_spectronaut(
     if not src.exists():
         raise FileNotFoundError(src)
     keep = outdir is not None
-    out = Path(outdir).resolve() if keep else Path(tempfile.mkdtemp(prefix="limpa-"))
-    if keep and out.exists() and any(out.iterdir()):
-        raise FileExistsError(
-            "outdir must be empty to prevent mixing old and new results"
-        )
-    out.mkdir(parents=True, exist_ok=True)
+    destination = Path(outdir).resolve() if keep else None
+    if destination is not None:
+        if destination.exists() and (
+            not destination.is_dir() or any(destination.iterdir())
+        ):
+            raise FileExistsError(
+                "outdir must be empty to prevent mixing old and new results"
+            )
+        destination.parent.mkdir(parents=True, exist_ok=True)
+    # Write alongside the destination, then atomically rename only a fully validated run.
+    out = Path(
+        tempfile.mkdtemp(prefix=".limpa-rs-", dir=destination.parent if keep else None)
+    )
 
     cmd = [
         str(R_SCRIPT),
@@ -175,10 +182,14 @@ def run_limpa_spectronaut(
         for line in proc.stderr.splitlines():
             if line.startswith("WARNING:"):
                 warnings.warn(line, RuntimeWarning, stacklevel=2)
-        return _read_outputs(out, keep)
+        result = _read_outputs(out, keep)
+        _validate_result(result)
+        if destination is not None:
+            os.replace(out, destination)  # cannot replace a nonempty directory
+            result.outdir = destination
+        return result
     finally:
-        if not keep:
-            shutil.rmtree(out, ignore_errors=True)
+        shutil.rmtree(out, ignore_errors=True)
 
 
 def _read_outputs(out: Path, keep: bool) -> LimpaResult:
@@ -214,3 +225,36 @@ def _read_outputs(out: Path, keep: bool) -> LimpaResult:
         compare=compare,
         outdir=out if keep else None,
     )
+
+
+def _validate_result(result: LimpaResult) -> None:
+    """Reject incomplete or misaligned scientific outputs before publishing them."""
+    e, se = result.protein_log2, result.protein_se
+    if (
+        e.empty
+        or not e.index.is_unique
+        or not e.columns.is_unique
+        or not e.index.equals(se.index)
+        or not e.columns.equals(se.columns)
+        or not e.index.equals(result.proteins.index)
+        or list(e.columns) != list(result.samples.index)
+    ):
+        raise RuntimeError(
+            "LIMPA output dimensions, identifiers or ordering are inconsistent"
+        )
+    try:
+        values, errors = e.to_numpy(dtype=float), se.to_numpy(dtype=float)
+    except (TypeError, ValueError) as exc:
+        raise RuntimeError("LIMPA returned nonnumeric protein outputs") from exc
+    if (
+        not np.isfinite(values).all()
+        or not np.isfinite(errors).all()
+        or (errors <= 0).any()
+    ):
+        raise RuntimeError(
+            "LIMPA returned nonfinite estimates or invalid standard errors"
+        )
+    if result.summary.get("n_proteins") != len(e) or result.summary.get(
+        "n_runs"
+    ) != len(e.columns):
+        raise RuntimeError("LIMPA summary counts disagree with output matrices")

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "limpa-rs"
-version = "0.1.0"
+version = "0.1.0rc1"
 description = "Python interface to Rust-accelerated LIMPA protein quantification"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -13,7 +13,7 @@ license-files = ["LICENSE", "NOTICE", "LICENSES/*"]
 authors = [{name = "Deliverome Project"}]
 dependencies = ["numpy>=1.26", "pandas>=2.2"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Operating System :: MacOS",
   "Operating System :: POSIX :: Linux",
   "Programming Language :: Python :: 3",

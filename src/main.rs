@@ -4,10 +4,35 @@
 use limpa_rs::{Model, Protein, fit};
 use rayon::prelude::*;
 use std::{
-    fs::File,
+    fs::{self, File},
     io::{self, BufReader, BufWriter, Read, Write},
-    time::Instant,
+    path::{Path, PathBuf},
+    time::{Instant, SystemTime, UNIX_EPOCH},
 };
+// A successful result appears atomically; failed runs leave no output to mistake
+// for a complete analysis. Hard-link publication cannot overwrite an existing file.
+struct PendingOutput(PathBuf);
+impl PendingOutput {
+    fn create(destination: &Path) -> io::Result<(Self, File)> {
+        let parent = destination.parent().unwrap_or(Path::new("."));
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map_err(io::Error::other)?
+            .as_nanos();
+        let path = parent.join(format!(".limpa-rs-{}-{nonce}.tmp", std::process::id()));
+        let file = File::options().write(true).create_new(true).open(&path)?;
+        Ok((Self(path), file))
+    }
+    fn publish(&self, destination: &Path) -> io::Result<()> {
+        fs::hard_link(&self.0, destination)
+    }
+}
+impl Drop for PendingOutput {
+    fn drop(&mut self) {
+        let _ = fs::remove_file(&self.0);
+    }
+}
+
 fn uint(r: &mut impl Read) -> io::Result<usize> {
     let mut b = [0; 4];
     r.read_exact(&mut b)?;
@@ -55,9 +80,12 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         prior_sd: float(&mut r)?,
         prior_logfc: float(&mut r)?,
     };
-    // Refuse overwrite, including aliases of the input. Failed output is incomplete
-    // and must never be consumed unless the process returned success.
-    let mut out = BufWriter::new(File::options().write(true).create_new(true).open(&a[1])?);
+    let destination = Path::new(&a[1]);
+    if destination.exists() {
+        return Err("output already exists; refusing to overwrite".into());
+    }
+    let (pending, file) = PendingOutput::create(destination)?;
+    let mut out = BufWriter::new(file);
     out.write_all(b"LIMPAO01")?;
     out.write_all(&(np as u32).to_le_bytes())?;
     out.write_all(&(n as u32).to_le_bytes())?;
@@ -102,6 +130,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         return Err("trailing input data".into());
     }
     out.flush()?;
+    out.get_ref().sync_all()?;
+    drop(out);
+    pending.publish(destination)?;
     eprintln!(
         "proteins={np} samples={n} threads={threads} elapsed_seconds={:.6} max_iterations={max_iter} max_gradient={max_gradient:.3e}",
         t.elapsed().as_secs_f64()

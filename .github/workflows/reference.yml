@@ -2,6 +2,7 @@ name: R reference equivalence
 on:
   pull_request:
   push:
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
@@ -16,6 +17,8 @@ jobs:
           use-public-rspm: true
       - uses: r-lib/actions/setup-renv@v2
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.99.0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'

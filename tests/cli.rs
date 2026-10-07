@@ -111,6 +111,7 @@ fn malformed_and_invalid_numeric_inputs_fail() {
         fs::write(w.0.join("input"), bytes).unwrap();
         let out = w.run("input", &format!("out{i}"), "1");
         assert!(!out.status.success());
+        assert!(!w.0.join(format!("out{i}")).exists());
         assert!(String::from_utf8_lossy(&out.stderr).contains("limpa-rs:"));
     }
     fs::write(w.0.join("input"), good).unwrap();
@@ -126,4 +127,15 @@ fn existing_output_and_input_are_never_overwritten() {
     assert_eq!(fs::read(w.0.join("out")).unwrap(), b"keep existing results");
     assert!(!w.run("input", "input", "1").status.success());
     assert_eq!(fs::read(w.0.join("input")).unwrap(), input);
+}
+
+#[test]
+fn late_failure_never_publishes_partial_results() {
+    let w = Workspace::new();
+    let mut input = fixture(70);
+    input.push(42); // detected only after both batches have been computed
+    fs::write(w.0.join("input"), input).unwrap();
+    assert!(!w.run("input", "out", "4").status.success());
+    assert!(!w.0.join("out").exists());
+    assert_eq!(fs::read_dir(&w.0).unwrap().count(), 1);
 }
