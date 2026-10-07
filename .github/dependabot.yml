@@ -1,6 +1,7 @@
 # Keep dependencies current: monthly grouped PRs; majors come as their own PRs (that is where
 # breakage is). The 7-day cooldown is a supply-chain quarantine: Dependabot never proposes a
 # release less than a week old. Same policy across Deliverome repos.
+# Major versions wait 30 days instead of 7, so the first bugfix releases (x.0.1...) are out.
 version: 2
 updates:
   - package-ecosystem: uv
@@ -9,6 +10,7 @@ updates:
       interval: monthly
     cooldown:
       default-days: 7
+      semver-major-days: 30   # majors wait a month so their first bugfix releases are out
     groups:
       python-minor-and-patch:
         update-types: [minor, patch]
@@ -20,6 +22,7 @@ updates:
       interval: monthly
     cooldown:
       default-days: 7
+      semver-major-days: 30   # majors wait a month so their first bugfix releases are out
     groups:
       cargo-minor-and-patch:
         update-types: [minor, patch]
@@ -31,6 +34,7 @@ updates:
       interval: monthly
     cooldown:
       default-days: 7
+      semver-major-days: 30   # majors wait a month so their first bugfix releases are out
     groups:
       actions:
         patterns: ["*"]
