@@ -2,6 +2,7 @@
 name = "limpa-rs"
 version = "0.1.0-rc.1"
 edition = "2024"
+authors = ["Rebecca Carlson", "Deliverome Project"]
 license = "GPL-3.0-or-later"
 description = "R-compatible LIMPA protein quantification with a structured Hessian"
 
