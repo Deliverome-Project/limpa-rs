@@ -24,7 +24,8 @@ audit the Python lock with pip-audit and Cargo.lock with RustSec, and lint workf
 security with zizmor. Downloaded scanner archives have fixed SHA-256 checksums.
 Checks also run weekly after this workflow lands on main. Action and Cargo updates
 are proposed by Dependabot and remain subject to review. To refresh Python
-versions, run `uv lock --upgrade`, review the diff, and submit a pull request.
+versions, update the exact requirements in `pyproject.toml`, regenerate `uv.lock`,
+review the diff, and submit a pull request.
 
 These measures reduce exposure to supply-chain campaigns such as Shai-Hulud; they
 do not establish that every dependency is safe. The Python cooldown does not cover
@@ -40,3 +41,28 @@ in a CI hardening change. Unmaintained warnings are visible but do not fail CI;
 known vulnerabilities, unsoundness, and yanked releases do. Reassess the warning
 when updating the numerical dependencies. GitHub secret scanning, push protection,
 and Dependabot vulnerability alerts/security updates are enabled for this repo.
+
+## Dependency pin policy
+
+Before dependency installation, required CI jobs run
+`scripts/check-dependency-pins.py`. Python runtime, build, test, and CI requirements
+must declare exact `==` versions present in `uv.lock`; all registry artifacts need
+SHA-256 hashes. `uv lock --check` also rejects stale locks. Rust direct dependencies
+must use exact `=version` requirements or full git revision hashes; registry crates
+in `Cargo.lock` need checksums, and Cargo commands must retain `--locked` or
+`--frozen`. The numerical dependency versions are unchanged.
+
+Every R package in `renv.lock` needs an exact version, remote records need immutable
+source SHAs, and required transitive dependencies and literal R imports must be in
+the lock. The vendored renv bootstrap is checked by version and SHA-256. After
+restoration, CI checks all installed package versions and R itself against the
+lock; source SHAs are compared when preserved by repository-built packages and
+required for git/GitHub installs. CRAN/Bioconductor version pins are not archive
+checksum verification.
+
+The static guard rejects common direct pip/R installs and unlocked Cargo/uv
+commands in workflows and maintained scripts. It is not an interpreter or a
+sandbox against obfuscated code; workflow changes still require review. Package
+metadata now pins direct Python dependencies, but downstream analyses should keep
+their own lock for transitive dependencies. Changes to pins must pass the existing
+package and reference-equivalence checks.
