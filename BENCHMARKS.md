@@ -127,3 +127,8 @@ failed results. The Newton solver remains an experimental library entry point.
 Raw validation tables are under `benchmarks/`. To reproduce, run the scripts listed
 in README using the pinned R environment. The private input and expanded matrices
 are never committed.
+
+Follow-up practice review: three additional CLI regression tests now cover identical
+outputs across worker counts/batches, malformed inputs, and overwrite protection.
+These supplement the five numerical unit tests; no numerical code or tolerance
+changed. See PORTING.md for the review sources and validation still outstanding.

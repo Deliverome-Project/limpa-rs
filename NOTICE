@@ -11,5 +11,9 @@ PR #141, commit 32c563c95410637e0431faf27eab1e7a9786464b.
 The original filtering, global parameter estimation, annotation and limma
 steps remain in R. The Rust solver is not a complete R-free LIMPA port.
 
-This combined work is distributed under GPL version 3 or later; see LICENSE.
+The project is distributed under GPL version 3 or later; see LICENSE.
+The vendored renv/activate.R bootstrap is separately licensed under MIT,
+Copyright (c) 2026 Posit Software, PBC; see LICENSES/renv-MIT.txt.
+Its upstream license and attribution are retained, not replaced by our SPDX tags.
+Other dependencies retain their own licenses; see LICENSING.md.
 No experimental data is distributed in this repository.

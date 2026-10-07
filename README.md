@@ -122,3 +122,11 @@ Reference: LIMPA 1.4.2, limma 3.68.5, R 4.6.1 and PR #141 commit
 `32c563c95410637e0431faf27eab1e7a9786464b`. The driver and R package lock are copied
 from that commit with a selectable Rust backend and deterministic seed added.
 The optimizer is adapted from R Core's `vmmin`; see [NOTICE](NOTICE) and [LICENSE](LICENSE).
+
+## License and porting practice
+
+Licensed under **GPL-3.0-or-later**; see [LICENSE](LICENSE),
+[upstream notices and rationale](LICENSING.md), and [NOTICE](NOTICE).
+The vendored renv bootstrap retains its separate MIT license.
+[PORTING.md](PORTING.md) records the public Claude-assisted rewrites reviewed,
+practices adopted here, and validation still outstanding.

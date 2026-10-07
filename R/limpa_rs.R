@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 # Bridge for limpa 1.4.2. Retains its global DPC/hyperparameter estimates and
 # initial values. Only independent per-protein posterior fits move to Rust.
 # Algorithm reference: SmythLab/limpa (GPL >= 2); see NOTICE.

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+#![forbid(unsafe_code)]
+
 //! LIMPA's Gaussian observed-data likelihood, logistic-normal missingness likelihood,
 //! and protein priors. Peptide effects sum to zero. The 16-point quadrature matches
 //! statmod::gauss.quad.prob; no data imputation enters the likelihood.

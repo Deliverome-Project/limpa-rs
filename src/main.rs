@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+#![forbid(unsafe_code)]
+
 use limpa_rs::{Model, Protein, fit};
 use rayon::prelude::*;
 use std::{

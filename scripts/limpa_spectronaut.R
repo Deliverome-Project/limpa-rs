@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 # Adapted from deliverome-analysis PR #141, commit 32c563c95410637e0431faf27eab1e7a9786464b.
 # limpa quantification (+ optional differential expression) of a Spectronaut report.
 #
