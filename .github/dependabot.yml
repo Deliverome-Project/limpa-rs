@@ -34,7 +34,6 @@ updates:
       interval: monthly
     cooldown:
       default-days: 7
-      semver-major-days: 30   # majors wait a month so their first bugfix releases are out
     groups:
       actions:
         patterns: ["*"]
