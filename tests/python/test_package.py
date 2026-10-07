@@ -149,3 +149,18 @@ def test_failed_persistent_run_never_publishes_partial_files(tmp_path, monkeypat
         lp.run_limpa_spectronaut(report, outdir=destination)
     assert not destination.exists()
     assert not list(tmp_path.glob(".limpa-rs-*"))
+
+
+def test_macos_wheel_tag_matches_native_architecture():
+    import importlib.metadata
+    import sys
+
+    if sys.platform != "darwin":
+        pytest.skip("Mach-O architecture check")
+    arches = subprocess.check_output(
+        ["lipo", "-archs", str(runtime._binary())], text=True
+    ).strip()
+    assert arches in ("arm64", "x86_64")
+    wheel = importlib.metadata.distribution("limpa-rs").read_text("WHEEL")
+    assert f"_{arches}\n" in wheel
+    assert "universal2" not in wheel

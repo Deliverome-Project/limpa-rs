@@ -4,6 +4,9 @@
 Python >=3.11 and R 4.6.x are required. macOS and Linux are supported. Installing
 from source also needs a Rust toolchain compatible with the locked dependencies
 (the tested compiler is Rust 1.99); installing a matching wheel does not need Rust.
+Release wheels target Apple Silicon macOS 11+ and Linux x86-64 (tested on the
+Ubuntu GitHub runner); the Linux wheel is not advertised as manylinux-portable.
+Build from source for other compatible machines, including Intel Macs.
 R remains necessary for DPC estimation, global parameters and differential analysis.
 There is no CRAN/Bioconductor `library(limpaRs)` package or public PyPI release.
 
