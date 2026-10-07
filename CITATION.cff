@@ -6,6 +6,8 @@ version: 0.1.0-rc.1
 license: GPL-3.0-or-later
 repository-code: "https://github.com/Deliverome-Project/limpa-rs"
 authors:
+  - family-names: Carlson
+    given-names: Rebecca
   - name: "Deliverome Project"
 references:
   - type: article

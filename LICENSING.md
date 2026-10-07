@@ -1,5 +1,9 @@
 # License and upstream provenance
 
+limpa-rs author: **Rebecca Carlson**, with the Deliverome Project.
+Copyright (c) 2026 Rebecca Carlson and limpa-rs contributors. This project
+notice preserves the separate original LIMPA, R Core, and dependency credits.
+
 The project license is **GPL-3.0-or-later**, consistently declared in `Cargo.toml`,
 `LICENSE`, and SPDX headers on the Rust core and R bridge/driver. The existing GPLv3
 license text remains unchanged. The public release retains all upstream notices.

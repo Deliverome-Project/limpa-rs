@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = "GPL-3.0-or-later"
 license-files = ["LICENSE", "NOTICE", "LICENSES/*"]
-authors = [{name = "Deliverome Project"}]
+authors = [{name = "Rebecca Carlson"}, {name = "Deliverome Project"}]
 dependencies = ["numpy==2.4.6", "pandas==3.0.6"]
 classifiers = [
   "Development Status :: 4 - Beta",

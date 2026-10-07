@@ -1,3 +1,8 @@
+limpa-rs
+Author: Rebecca Carlson, with the Deliverome Project.
+Copyright (c) 2026 Rebecca Carlson and limpa-rs contributors.
+This project notice does not replace the upstream notices below.
+
 limpa-rs uses the statistical model implemented by SmythLab/limpa 1.4.2
 (https://github.com/SmythLab/limpa), licensed GPL (>= 2).
 
