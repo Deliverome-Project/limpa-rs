@@ -1,4 +1,4 @@
-# Keep dependencies current: weekly grouped PRs; majors come as their own PRs (that is where
+# Keep dependencies current: monthly grouped PRs; majors come as their own PRs (that is where
 # breakage is). The 7-day cooldown is a supply-chain quarantine: Dependabot never proposes a
 # release less than a week old. Same policy across Deliverome repos.
 version: 2
