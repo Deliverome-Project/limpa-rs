@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools==83.0.0", "setuptools-rust==1.13.0"]
+requires = ["setuptools==84.0.0", "setuptools-rust==1.13.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -47,7 +47,7 @@ testpaths = ["tests/python"]
 
 [dependency-groups]
 ci = [
-  "build==1.6.1", "pytest==9.1.1", "setuptools==83.0.0", "setuptools-rust==1.13.0",
+  "build==1.6.1", "pytest==9.1.1", "setuptools==84.0.0", "setuptools-rust==1.13.0",
   "pip-audit==2.10.1", "zizmor==1.30.1",
 ]
 
