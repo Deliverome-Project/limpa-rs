@@ -19,6 +19,13 @@ for(engine in c("reference","rust")) {
  args<-c(shQuote(file.path(root,"scripts/limpa_spectronaut.R")),shQuote(paste0("--report=",report)),shQuote(paste0("--outdir=",file.path(root,"results/e2e",engine))),paste0("--engine=",engine),"--seed=141","--cores=1",shQuote("--formula=~ R.Condition"))
  stopifnot(system2(file.path(R.home("bin"),"Rscript"),args)==0)
 }
+for(engine in c("reference", "rust")) {
+ credits <- readLines(file.path(root, "results/e2e", engine, "CITATIONS.txt"))
+ stopifnot(any(grepl("10.1101/2025.04.28.651125", credits, fixed=TRUE)),
+           any(grepl("10.1093/bioinformatics/btad200", credits, fixed=TRUE)),
+           any(grepl("AI coding assistants", credits, fixed=TRUE)),
+           any(grepl("limma 3.68.5", credits, fixed=TRUE)))
+}
 metrics<-list()
 for(name in c("protein_log2.tsv","protein_se.tsv","de_R.ConditionB.tsv")) {
  a<-fread(file.path(root,"results/e2e/reference",name));b<-fread(file.path(root,"results/e2e/rust",name))

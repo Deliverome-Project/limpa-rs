@@ -10,6 +10,23 @@ reads/filters inputs, estimates the detection probability curve and empirical
 Bayes hyperparameters, supplies reference starting values, and performs limma DE.
 Keeping those stages shared isolates the equivalence test to the expensive core.
 
+## AI assistance disclosure
+
+AI coding assistants have been used to help write this package's code and
+documentation. OpenAI Codex assisted with the attribution documentation and
+export changes in this update. This is a disclosure about this package's
+development, not a claim about how the upstream software was written. A complete
+historical inventory of AI tools, model versions, and per-file contributions is
+not maintained. The human maintainer remains responsible for release decisions
+and scientific claims; AI assistance does not establish correctness or imply
+that every contribution has received independent human review.
+
+Correctness is assessed against pinned LIMPA 1.4.2 reference outputs, including
+synthetic and documented real-data comparisons, rather than inferred from AI
+output or code review alone. Finite-data checks are not a proof of equivalence;
+a real approximately 384-sample cohort remains unvalidated. See
+[validation coverage](validation/README.md) and [benchmarks](BENCHMARKS.md).
+
 ## Input formats
 
 The numerical core is independent of the instrument and upstream search software.
@@ -183,7 +200,15 @@ output-equivalence claim.
   an existing file. The Python API validates complete, finite, aligned outputs before
   atomically publishing the result directory; a failed run publishes no partial result.
 
-## Provenance
+## How to cite and provenance
+
+Please cite the original LIMPA methods when publishing papers, preprints, or
+reports using limpa-rs results, alongside the limpa-rs version or commit.
+See [scientific credits and methods wording](CREDITS.md). Each driver run writes
+`CITATIONS.txt` with the original references, AI disclosure, and runtime versions;
+keep it with exported results. The Python result also retains original-method
+citations and the AI disclosure in `result.summary`, including when `outdir`
+is omitted.
 
 Original LIMPA methods: Li, Cobbold & Smyth (2025), and Li & Smyth (2023).
 See [CITATION.cff](CITATION.cff) for the full references.

@@ -8,3 +8,5 @@ recursive-include LICENSES *
 recursive-include tests *.rs *.py
 recursive-include docs *.md
 include uv.lock
+
+include CREDITS.md
