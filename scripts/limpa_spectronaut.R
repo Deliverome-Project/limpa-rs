@@ -22,6 +22,7 @@
 #   protein_annotation.tsv  protein id, annotation columns, NPrec, PropObs
 #   samples.tsv             run-level table (Spectronaut run info + any --samples columns)
 #   dpc_points.tsv          precursors used to fit the DPC: limpa's mean estimate, n detected
+#   CITATIONS.txt          original method credits, AI disclosure, runtime citations
 #   summary.json            DPC coefficients, counts, missingness, package versions
 #   de_<name>.tsv           one limma topTable per coefficient / contrast (only with --formula)
 #   maxlfq_log2.tsv         protein x run MaxLFQ (iq::fast_MaxLFQ), NAs kept (with --compare)
@@ -346,5 +347,20 @@ summary <- list(
   limma_version = as.character(packageVersion("limma")),
   r_version = R.version.string
 )
+# Keep scientific credit with results from both the R CLI and Python wrapper.
+credits <- readLines(file.path(root, "CREDITS.md"), warn = FALSE)
+packages <- c("limpa", if (length(de_tables)) "limma",
+              if (length(compare)) "iq", if ("maxlfq_proda" %in% compare) "proDA")
+run_citations <- c(credits, "", "## Runtime versions and additional citations", R.version.string)
+for (package in packages) {
+  run_citations <- c(run_citations, "", paste(package, as.character(packageVersion(package))),
+                    capture.output(print(citation(package), style = "text")))
+}
+writeLines(run_citations, file.path(outdir, "CITATIONS.txt"))
+summary$citations_file <- "CITATIONS.txt"
+summary$method_citations <- c(
+  "Li M, Cobbold SA, Smyth GK (2025). doi:10.1101/2025.04.28.651125",
+  "Li M, Smyth GK (2023). doi:10.1093/bioinformatics/btad200")
+summary$ai_assistance <- "AI coding assistants helped write package code and documentation; OpenAI Codex assisted with attribution and exports. This does not describe upstream development or establish validation."
 writeLines(to_json(summary), file.path(outdir, "summary.json"))
 message("limpa: ", nrow(y$E), " precursors -> ", nrow(yp$E), " proteins across ", ncol(y$E), " runs")

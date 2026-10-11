@@ -15,6 +15,7 @@ from limpa_rs import api, runtime
 def test_wheel_contains_runtime_and_binary():
     assert runtime._binary().is_file()
     for name in (
+        "CREDITS.md",
         "R/limpa_rs.R",
         "scripts/limpa_spectronaut.R",
         "renv.lock",

@@ -37,6 +37,7 @@ class BuildRuntime(build_py):
         (dest / "renv").mkdir(exist_ok=True)
         copy2(root / "renv/activate.R", dest / "renv/activate.R")
         copy2(root / "renv.lock", dest / "renv.lock")
+        copy2(root / "CREDITS.md", dest / "CREDITS.md")
 
 
 class BinaryWheel(bdist_wheel):
