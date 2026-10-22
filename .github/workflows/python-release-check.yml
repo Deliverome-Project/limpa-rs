@@ -1,0 +1,17 @@
+# Monthly reminder to consider a newer stable Python (Deliverome-Project/.github). Keeps one
+# open "Python upgrade: ..." issue here while this repo targets an older Python than the newest
+# cycle that is at least 90 days old.
+name: python-release-check
+
+on:
+  schedule:
+    - cron: "0 14 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  python-release:
+    uses: Deliverome-Project/.github/.github/workflows/python-release-check.yml@6ce21c60e1177cda9639fe66a26991fd123bc99e

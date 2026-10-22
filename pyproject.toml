@@ -7,7 +7,7 @@ name = "limpa-rs"
 version = "0.1.0rc1"
 description = "Python interface to Rust-accelerated LIMPA protein quantification"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.14"
 license = "GPL-3.0-or-later"
 license-files = ["LICENSE", "NOTICE", "LICENSES/*"]
 authors = [{name = "Rebecca Carlson"}, {name = "Deliverome Project"}]
