@@ -1,4 +1,10 @@
 repos:
+  # Pre-push BLOCK: this machine must not trust a compromised CA root (macOS, Homebrew and
+  # .venv certifi bundles) or run a uv older than its fixed release (eMudhra, 2026-10-19).
+  - repo: https://github.com/Deliverome-Project/.github
+    rev: 2689191da0b44c806124cbbf781cf2f39bf3f62c  # security-floors-emudhra
+    hooks:
+      - id: trust-store-check
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.21.2
     hooks:

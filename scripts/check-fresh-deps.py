@@ -16,6 +16,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MIN_AGE = timedelta(days=7)
+# Exact releases allowed through the seven-day rule because they fix a security issue that
+# cannot wait. Remove each entry once it is a week old. certifi 2026.10.19 and pip 26.2.2
+# drop the root behind the eMudhra intermediates compromised on 2026-10-19
+# (https://blog.cloudflare.com/emudhra-certificate-compromise/).
+SECURITY_EXCEPTIONS = {("certifi", "2026.10.19"), ("pip", "26.2.2")}
 
 
 def registry_packages(text):
@@ -51,7 +56,7 @@ def check_package(package, now):
     try:
         with urllib.request.urlopen(request, timeout=30) as response:
             published = release_time(json.load(response))
-        if now - published < MIN_AGE:
+        if now - published < MIN_AGE and package not in SECURITY_EXCEPTIONS:
             return f"{name}=={version}: release is less than seven days old"
     except Exception as exc:
         return f"{name}=={version}: cannot verify release age ({type(exc).__name__})"
