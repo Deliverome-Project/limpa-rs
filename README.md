@@ -58,7 +58,7 @@ analysis workflow.
 
 ## Install as a Python package
 
-Python >=3.11, R 4.6.x, macOS/Linux. From this checkout, in your analysis environment:
+Python >=3.14, R 4.6.x, macOS/Linux. From this checkout, in your analysis environment:
 
 ```sh
 uv pip install .
