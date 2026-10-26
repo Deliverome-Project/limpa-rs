@@ -40,7 +40,11 @@ Current Rust audit warning: `paste` 1.0.15 is an unmaintained transitive depende
 in a CI hardening change. Unmaintained warnings are visible but do not fail CI;
 known vulnerabilities, unsoundness, and yanked releases do. Reassess the warning
 when updating the numerical dependencies. GitHub secret scanning, push protection,
-and Dependabot vulnerability alerts/security updates are enabled for this repo.
+and Dependabot vulnerability alerts are enabled for this repo. Dependabot security
+updates are off: they ignore the 7-day release-age cooldown, so they open PRs the
+dependency guard rejects. Fixes arrive through the monthly version updates instead,
+and anything worth fixing now is raised by the org security digest
+(deliverome-internal `aws/security_digest/`), whose responder respects the same rule.
 
 ## Dependency pin policy
 
