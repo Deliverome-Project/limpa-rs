@@ -80,7 +80,7 @@ checksum = "37bfe73dc8ec21f54d181e5a60554327ec3f1c600c455a75ccbfc65d2106a6c4"
 
 [[package]]
 name = "limpa-rs"
-version = "0.1.0-rc.1"
+version = "0.1.0-rc.2"
 dependencies = [
  "nalgebra",
  "rayon",

@@ -1,9 +1,11 @@
 # Release acceptance
 
-## v0.1.0-rc.1
+## v0.1.0-rc.2
 
-This is a release candidate. Passing automated software checks is not the same as
-validating a production scientific workflow on its intended cohort.
+This is a release candidate. The numerical core is unchanged from v0.1.0-rc.1;
+the Rust tests and R reference-equivalence checks run in CI against the updated
+dependencies. Passing automated software checks is not the same as validating a
+production scientific workflow on its intended cohort.
 
 Completed checks include a pinned LIMPA/R dependency environment; frozen reference
 outputs at 3, 6, 32 and 384 samples; matched estimates/uncertainty and metadata;

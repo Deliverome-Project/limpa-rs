@@ -51,7 +51,7 @@ Target: at least 20× faster quantification on approximately 11,000 proteins and
 machine. See [BENCHMARKS.md](BENCHMARKS.md) for measured results and the exact timing
 boundaries. Do not interpret a subset speedup as a measured full-workload speedup.
 
-**Release status:** v0.1.0-rc.1 is a public release candidate. Production use on
+**Release status:** v0.1.0-rc.2 is a public release candidate. Production use on
 an actual ~384-sample cohort has not yet been validated. See
 [release acceptance criteria](docs/release-readiness.md) before replacing a validated
 analysis workflow.

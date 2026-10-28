@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "limpa-rs"
-version = "0.1.0rc1"
+version = "0.1.0rc2"
 description = "Python interface to Rust-accelerated LIMPA protein quantification"
 readme = "README.md"
 requires-python = ">=3.14"

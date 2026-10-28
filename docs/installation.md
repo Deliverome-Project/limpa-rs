@@ -13,17 +13,17 @@ There is no CRAN/Bioconductor `library(limpaRs)` package or public PyPI release.
 ## Install
 
 Install a matching wheel from the
-[GitHub release](https://github.com/Deliverome-Project/limpa-rs/releases/tag/v0.1.0-rc.1),
+[GitHub release](https://github.com/Deliverome-Project/limpa-rs/releases/tag/v0.1.0-rc.2),
 or build the tagged source:
 
 ```sh
-uv pip install "git+https://github.com/Deliverome-Project/limpa-rs.git@v0.1.0-rc.1"
+uv pip install "git+https://github.com/Deliverome-Project/limpa-rs.git@v0.1.0-rc.2"
 python -m limpa_rs setup-r
 python -m limpa_rs doctor
 python -m limpa_rs validate
 ```
 
-Run these inside your analysis Python environment. `python -m pip install "git+https://github.com/Deliverome-Project/limpa-rs.git@v0.1.0-rc.1"`
+Run these inside your analysis Python environment. `python -m pip install "git+https://github.com/Deliverome-Project/limpa-rs.git@v0.1.0-rc.2"`
 works too. Installation compiles the Rust executable in release mode with
 `Cargo.lock` enforced and includes the R driver, lockfile and validation fixtures.
 The explicit `setup-r` step downloads/restores R dependencies; importing the package
