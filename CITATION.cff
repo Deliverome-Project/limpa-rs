@@ -7,7 +7,9 @@ license: GPL-3.0-or-later
 repository-code: "https://github.com/Deliverome-Project/limpa-rs"
 authors:
   - family-names: Carlson
-    given-names: Rebecca
+    given-names: Rebecca J.
+    affiliation: "Deliverome Bio, Inc."
+    orcid: "https://orcid.org/0000-0002-5423-9717"
   - name: "Deliverome Project"
 references:
   - type: article

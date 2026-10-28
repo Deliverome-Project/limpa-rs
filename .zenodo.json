@@ -1,0 +1,48 @@
+{
+  "upload_type": "software",
+  "title": "limpa-rs: Rust acceleration of LIMPA protein quantification",
+  "description": "<p>limpa-rs accelerates protein quantification with LIMPA 1.4.2 (SmythLab) on precursor-level mass spectrometry proteomics data. The Rust core fits each protein using LIMPA's likelihood, normal quadrature, sum-to-zero peptide effects, protein priors, R-compatible BFGS stopping rules and observed-Hessian standard errors, running independent proteins in parallel. A Python package provides a pandas interface for Spectronaut exports.</p><p>This is a hybrid implementation, not an R-free port. R still reads and filters inputs, estimates the detection probability curve and empirical Bayes hyperparameters, supplies starting values, and runs limma differential expression. The BFGS routine is adapted from R's optim.c (vmmin).</p><p>Please cite the original LIMPA methods: Li, Cobbold &amp; Smyth (2025), <a href=\"https://doi.org/10.1101/2025.04.28.651125\">10.1101/2025.04.28.651125</a>, and Li &amp; Smyth (2023), <a href=\"https://doi.org/10.1093/bioinformatics/btad200\">10.1093/bioinformatics/btad200</a>.</p><p>Equivalence is checked against pinned LIMPA 1.4.2 reference outputs on synthetic data and a real three-run cohort. Validation on a complete ~384-sample cohort remains open, so this software is not yet a production-validated replacement for the reference workflow. See the repository's release acceptance criteria. AI coding assistants helped write the code and documentation; the maintainer is responsible for release decisions and scientific claims.</p>",
+  "license": "gpl-3.0-or-later",
+  "access_right": "open",
+  "language": "eng",
+  "creators": [
+    {
+      "name": "Carlson, Rebecca J.",
+      "affiliation": "Deliverome Bio, Inc.",
+      "orcid": "0000-0002-5423-9717"
+    },
+    {
+      "name": "Deliverome Project"
+    }
+  ],
+  "keywords": [
+    "LIMPA",
+    "proteomics",
+    "mass spectrometry",
+    "protein quantification",
+    "label-free quantification",
+    "missing values",
+    "Spectronaut",
+    "Rust"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.1101/2025.04.28.651125",
+      "relation": "references",
+      "resource_type": "publication-preprint",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1093/bioinformatics/btad200",
+      "relation": "references",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "https://github.com/SmythLab/limpa",
+      "relation": "isDerivedFrom",
+      "resource_type": "software",
+      "scheme": "url"
+    }
+  ]
+}
