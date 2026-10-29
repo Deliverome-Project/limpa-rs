@@ -7,6 +7,8 @@ notice preserves the separate original LIMPA, R Core, and dependency credits.
 The project license is **GPL-3.0-or-later**, consistently declared in `Cargo.toml`,
 `LICENSE`, and SPDX headers on the Rust core and R bridge/driver. The existing GPLv3
 license text remains unchanged. The public release retains all upstream notices.
+`LICENSE` holds the verbatim GPLv3 text and nothing else, so GitHub detects it as
+GPL-3.0; the project copyright line and upstream credits live in `NOTICE`.
 
 This is a source-informed port: its BFGS implementation adapts R Core's `vmmin`,
 whose notice permits GPL version 2 or later. LIMPA 1.4.2 declares `GPL (>=2)` in
