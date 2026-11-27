@@ -57,9 +57,6 @@ ci = [
 required-version = ">=0.13.4"
 # Seven-day delay when selecting new Python distributions.
 exclude-newer = "7 days"
-# Security fixes that cannot wait out the quarantine: these releases drop the root behind
-# the compromised eMudhra intermediates. Remove once they are older than 7 days.
-exclude-newer-package = { certifi = false, pip = false }
 # Security floors (eMudhra CA compromise, 2026-10-19), also enforced by the shared
 # dependency guard in Deliverome-Project/.github.
 constraint-dependencies = ["certifi>=2026.10.19", "pip>=26.2.2"]
