@@ -43,7 +43,7 @@ jobs:
           uv export --locked --group ci --no-emit-project --output-file "$RUNNER_TEMP/audit-requirements.txt"
           pip-audit --disable-pip --no-deps -r "$RUNNER_TEMP/audit-requirements.txt"
       - name: Audit workflow security
-        run: zizmor --offline --min-severity medium .github/workflows
+        run: zizmor --offline --config .github/zizmor.yml --min-severity medium .github/workflows
       - name: Install checksum-verified security scanners
         env:
           SCANNER_DIR: ${{ runner.temp }}/limpa-scanners

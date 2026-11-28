@@ -14,4 +14,4 @@ permissions:
 
 jobs:
   guard:
-    uses: Deliverome-Project/.github/.github/workflows/dependency-guard.yml@b42cc4c1e201fa8baff20ce90c31c93675e0cc68 # v1
+    uses: Deliverome-Project/.github/.github/workflows/dependency-guard.yml@v1
