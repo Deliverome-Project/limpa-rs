@@ -14,4 +14,4 @@ permissions:
 
 jobs:
   python-release:
-    uses: Deliverome-Project/.github/.github/workflows/python-release-check.yml@6ce21c60e1177cda9639fe66a26991fd123bc99e
+    uses: Deliverome-Project/.github/.github/workflows/python-release-check.yml@v1

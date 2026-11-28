@@ -1,0 +1,6 @@
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        Deliverome-Project/*: ref-pin
+        "*": hash-pin
